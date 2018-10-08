@@ -4,9 +4,18 @@
 *.dll
 *.so
 *.dylib
+terraform-provider-*
 
 # Test binary, build with `go test -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Vendor directory managed by dep
+vendor/
+
+# Terraform config directory
+.terraform
+*.tfstate*
+crash.log
