@@ -20,11 +20,10 @@ type Client struct {
 func NewClient(apiUser, apiPassword string) *Client {
 
 	return &Client{
-		apiUser:      apiUser,
-		apiPassword:  apiPassword,
-		baseUrl:      "",
-		HttpClient:   http.DefaultClient,
-		RetryTimeout: time.Duration(60 * time.Second),
+		apiUser:     apiUser,
+		apiPassword: apiPassword,
+		baseUrl:     "",
+		HttpClient:  http.DefaultClient,
 	}
 }
 

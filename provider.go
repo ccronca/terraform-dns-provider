@@ -37,8 +37,8 @@ func Provider() *schema.Provider {
 }
 
 func configureProvider(d *schema.ResourceData) (interface{}, error) {
-	user := d.Get("user").(string)
-	password := d.Get("password").(string)
+	user := d.Get("api_user").(string)
+	password := d.Get("api_password").(string)
 
 	c := client.NewClient(user, password)
 

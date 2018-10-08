@@ -1,8 +1,12 @@
 package client
 
 type DnsRecord struct {
-	Address  string `json:"address,omitempty"`
-	HostName string `json:"hostname,omitempty"`
+	Address  string `json:"ip_addr,omitempty"`
+	HostName string `json:"host,omitempty"`
+}
+
+func (d *DnsRecord) Query() string {
+	return "ip_addr=" + d.Address + "&host=" + d.HostName
 }
 
 // Create creates a dns record
@@ -11,7 +15,7 @@ func (c *Client) Create(address, hostname string) (*DnsRecord, error) {
 		Address:  address,
 		HostName: hostname,
 	}
-	if err := c.doRequest(*dns); err != nil {
+	if err := c.doRequest(dns.Query()); err != nil {
 		return nil, err
 	}
 	return dns, nil
@@ -23,7 +27,7 @@ func (c *Client) Delete(address string) (*DnsRecord, error) {
 		Address:  address,
 		HostName: "delete",
 	}
-	if err := c.doRequest(*dns); err != nil {
+	if err := c.doRequest(dns.Query()); err != nil {
 		return nil, err
 	}
 	return dns, nil

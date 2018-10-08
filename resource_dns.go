@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+
+	"github.com/camilocot/terraform-dns-provider/client"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -20,21 +23,18 @@ func resourceDns() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"recordtype": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: false,
-				Optional: true,
-				Default:  "A",
-			},
 		},
 	}
 }
 
 func resourceDnsCreate(d *schema.ResourceData, m interface{}) error {
+	c := m.(*client.Client)
 	address := d.Get("address").(string)
-	recordtype := d.Get("recordtype").(string)
-	d.SetId(recordtype + "-" + address)
-	return nil
+	hostname := d.Get("hostname").(string)
+	d.SetId(address)
+	dns, err := c.Create(address, hostname)
+	log.Printf("[INFO] %v", dns)
+	return err
 }
 
 func resourceDnsRead(d *schema.ResourceData, m interface{}) error {

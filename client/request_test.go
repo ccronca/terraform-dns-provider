@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/base64"
 	"net/http"
 	"testing"
 
@@ -14,10 +15,21 @@ func TestUriForApi(t *testing.T) {
 		baseUrl:     "https://basedomain.com",
 		HttpClient:  &http.Client{},
 	}
+
 	t.Run("Get Uri for api", func(t *testing.T) {
-		uri, err := c.uriForAPI("host", "ip")
+		uri, err := c.uriForAPI("host=test&ip_addr=ip")
 		assert.Nil(t, err)
-		assert.Equal(t, "https://basedomain.com?host=host&ip_addr=ip", uri)
+		assert.Equal(t, "https://basedomain.com?host=test&ip_addr=ip", uri)
 
 	})
+	t.Run("Get basic Auth encoded", func(t *testing.T) {
+		enc := basicAuth(c.apiUser, c.apiPassword)
+		assert.Equal(t, base64.StdEncoding.EncodeToString([]byte(c.apiUser+":"+c.apiPassword)), enc)
+	})
+	t.Run("Create a request", func(t *testing.T) {
+		req, err := c.createRequest("host=test&ip_addr=ip")
+		assert.Nil(t, err)
+		assert.Regexp(t, "^Basic ", req.Header.Get("Authorization"))
+	})
+
 }

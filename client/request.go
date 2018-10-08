@@ -8,8 +8,8 @@ import (
 	"net/url"
 )
 
-func (client *Client) doRequest(dns interface{}) error {
-	req, err := client.createRequest(dns)
+func (client *Client) doRequest(query string) error {
+	req, err := client.createRequest(query)
 	if err != nil {
 		return err
 	}
@@ -33,29 +33,26 @@ func (client *Client) doRequest(dns interface{}) error {
 	return nil
 }
 
-func (client *Client) createRequest(dns) (*http.Request, error) {
+func (client *Client) createRequest(query string) (*http.Request, error) {
 
-	apiUrlStr, err := client.uriForAPI()
+	apiUrlStr, err := client.uriForAPI(query)
+
 	if err != nil {
 		return nil, err
 	}
 	req, err := http.NewRequest("GET", apiUrlStr, nil)
-	req.Header.Add("Authorization", "Basic "+basicAuth(client.api_user, client.api_password))
+	req.Header.Add("Authorization", "Basic "+basicAuth(client.apiUser, client.apiPassword))
 	if err != nil {
 		return nil, err
 	}
 	return req, nil
 }
 
-func (client *Client) uriForAPI(host, ip_addr string) (string, error) {
-	apiBase, err := url.Parse(client.baseUrl)
+func (client *Client) uriForAPI(query string) (string, error) {
+	apiBase, err := url.Parse(client.baseUrl + "?" + query)
 	if err != nil {
 		return "", err
 	}
-	q := apiBase.Query()
-	q.Add("host", host)
-	q.Add("ip_addr", ip_addr)
-	apiBase.RawQuery = q.Encode()
 	return apiBase.String(), nil
 }
 
