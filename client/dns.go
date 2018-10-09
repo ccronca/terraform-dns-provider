@@ -22,10 +22,10 @@ func (c *Client) Create(address, hostname string) (*DnsRecord, error) {
 }
 
 // Delete deletes a dns record
-func (c *Client) Delete(address string) (*DnsRecord, error) {
+func (c *Client) Delete(hostname string) (*DnsRecord, error) {
 	dns := &DnsRecord{
-		Address:  address,
-		HostName: "delete",
+		Address:  "delete",
+		HostName: hostname,
 	}
 	if err := c.doRequest(dns.Query()); err != nil {
 		return nil, err

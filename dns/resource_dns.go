@@ -1,8 +1,6 @@
-package main
+package dns
 
 import (
-	"log"
-
 	"github.com/camilocot/terraform-dns-provider/client"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -31,9 +29,8 @@ func resourceDnsCreate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*client.Client)
 	address := d.Get("address").(string)
 	hostname := d.Get("hostname").(string)
-	d.SetId(address)
-	dns, err := c.Create(address, hostname)
-	log.Printf("[INFO] %v", dns)
+	d.SetId(hostname)
+	_, err := c.Create(address, hostname)
 	return err
 }
 
@@ -42,9 +39,12 @@ func resourceDnsRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceDnsUpdate(d *schema.ResourceData, m interface{}) error {
-	return nil
+	return resourceDnsCreate(d, m)
 }
 
 func resourceDnsDelete(d *schema.ResourceData, m interface{}) error {
-	return nil
+	c := m.(*client.Client)
+	hostname := d.Get("hostname").(string)
+	_, err := c.Delete(hostname)
+	return err
 }
