@@ -2,6 +2,7 @@ package dns
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/camilocot/terraform-dns-provider/client"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -40,7 +41,7 @@ func configureProvider(d *schema.ResourceData) (interface{}, error) {
 	user := d.Get("api_user").(string)
 	password := d.Get("api_password").(string)
 
-	c := client.NewClient(user, password)
+	c := client.NewClient(user, password, http.DefaultClient)
 
 	if apiURL := d.Get("api_url").(string); apiURL != "" {
 		c.SetBaseUrl(apiURL)

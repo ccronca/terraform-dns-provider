@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/base64"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -32,4 +33,53 @@ func TestUriForApi(t *testing.T) {
 		assert.Regexp(t, "^Basic ", req.Header.Get("Authorization"))
 	})
 
+}
+
+func TestDoFailedRequest(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Something bad happened!"))
+	}))
+
+	defer server.Close()
+
+	api := NewClient("user", "password", server.Client())
+	api.SetBaseUrl(server.URL)
+
+	err := api.doRequest("query")
+
+	assert.NotNil(t, err)
+	assert.Error(t, err, "API error 500 Internal Server Error: Something bad happened!")
+}
+
+func TestDoSuccessRequest(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("OK"))
+	}))
+
+	defer server.Close()
+
+	api := NewClient("user", "password", server.Client())
+	api.SetBaseUrl(server.URL)
+
+	err := api.doRequest("query")
+
+	assert.Nil(t, err)
+}
+
+func TestCreateRequest(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("OK"))
+	}))
+
+	defer server.Close()
+
+	api := NewClient("user", "password", server.Client())
+	api.SetBaseUrl(server.URL)
+
+	req, err := api.createRequest("query")
+
+	assert.Nil(t, err)
+	assert.Equal(t, "GET", req.Method)
+	assert.Equal(t, http.Header{"Authorization": []string{"Basic " + basicAuth(api.apiUser, api.apiPassword)}}, req.Header)
 }

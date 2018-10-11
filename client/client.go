@@ -2,7 +2,6 @@ package client
 
 import (
 	"net/http"
-	"time"
 )
 
 // Client is the object that handles talking to the DNS API. This maintains
@@ -11,19 +10,18 @@ type Client struct {
 	apiUser, apiPassword, baseUrl string
 
 	//The Http Client that is used to make requests
-	HttpClient   *http.Client
-	RetryTimeout time.Duration
+	HttpClient *http.Client
 }
 
 // NewClient returns a new client which can be used to access the API
 // methods. The expected argument is the API user and password.
-func NewClient(apiUser, apiPassword string) *Client {
+func NewClient(apiUser, apiPassword string, c *http.Client) *Client {
 
 	return &Client{
 		apiUser:     apiUser,
 		apiPassword: apiPassword,
 		baseUrl:     "",
-		HttpClient:  http.DefaultClient,
+		HttpClient:  c,
 	}
 }
 
