@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - "1.10.1"
+
+before_script:
+  - make deps
+
+script: make test
+
+after_success:
+- echo 'Unit tests passed'
+
+after_failure:
+- echo 'Unit tests failed'
+~
