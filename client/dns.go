@@ -10,7 +10,7 @@ func (d *DnsRecord) Query() string {
 }
 
 // Create creates a dns record
-func (c *Client) Create(address, hostname string) (*DnsRecord, error) {
+func (c *Client) DnsCreate(address, hostname string) (*DnsRecord, error) {
 	dns := &DnsRecord{
 		Address:  address,
 		HostName: hostname,
@@ -22,7 +22,7 @@ func (c *Client) Create(address, hostname string) (*DnsRecord, error) {
 }
 
 // Delete deletes a dns record
-func (c *Client) Delete(hostname string) (*DnsRecord, error) {
+func (c *Client) DnsDelete(hostname string) (*DnsRecord, error) {
 	dns := &DnsRecord{
 		Address:  "delete",
 		HostName: hostname,

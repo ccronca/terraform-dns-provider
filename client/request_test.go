@@ -83,3 +83,11 @@ func TestCreateRequest(t *testing.T) {
 	assert.Equal(t, "GET", req.Method)
 	assert.Equal(t, http.Header{"Authorization": []string{"Basic " + basicAuth(api.apiUser, api.apiPassword)}}, req.Header)
 }
+
+func TestBasicAuth(t *testing.T) {
+	username := "username"
+	password := "password"
+	auth := username + ":" + password
+	b64Auth := base64.StdEncoding.EncodeToString([]byte(auth))
+	assert.Equal(t, b64Auth, basicAuth(username, password))
+}

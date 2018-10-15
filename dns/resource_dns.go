@@ -30,7 +30,7 @@ func resourceDnsCreate(d *schema.ResourceData, m interface{}) error {
 	address := d.Get("address").(string)
 	hostname := d.Get("hostname").(string)
 	d.SetId(hostname)
-	_, err := c.Create(address, hostname)
+	_, err := c.DnsCreate(address, hostname)
 	return err
 }
 
@@ -45,6 +45,6 @@ func resourceDnsUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceDnsDelete(d *schema.ResourceData, m interface{}) error {
 	c := m.(*client.Client)
 	hostname := d.Get("hostname").(string)
-	_, err := c.Delete(hostname)
+	_, err := c.DnsDelete(hostname)
 	return err
 }
