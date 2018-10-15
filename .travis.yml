@@ -13,4 +13,3 @@ after_success:
 
 after_failure:
 - echo 'Unit tests failed'
-~
