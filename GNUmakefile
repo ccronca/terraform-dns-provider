@@ -21,4 +21,8 @@ errcheck:
 vendor-status:
 	@govendor status
 
-.PHONY: build test testacc fmtcheck errcheck vendor-status
+deps:
+	go get -u github.com/golang/dep/cmd/dep
+	dep ensure -v
+
+.PHONY: build test testacc fmtcheck errcheck vendor-status deps
