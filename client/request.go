@@ -3,7 +3,6 @@ package client
 import (
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -23,13 +22,8 @@ func (client *Client) doRequest(query string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return err
-		}
-		return fmt.Errorf("API error %s: %s", resp.Status, body)
+		return fmt.Errorf("API error %s", resp.Status)
 	}
-	// Don't care about resp body
 	return nil
 }
 

@@ -8,10 +8,26 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-var testDnsProvider *schema.Provider
+var testAccProviders map[string]terraform.ResourceProvider
+var testAccProvider *schema.Provider
+
+var (
+	API_USER     = os.Getenv("API_USER")
+	API_PASSWORD = os.Getenv("API_PASSWORD")
+	API_URL      = os.Getenv("API_URL")
+)
+
+const (
+	rName     = "dns_server_1"
+	rAddress  = "1.2.3.4"
+	rHostname = "test.com"
+)
 
 func init() {
-	testDnsProvider = Provider()
+	testAccProvider = Provider()
+	testAccProviders = map[string]terraform.ResourceProvider{
+		"camilocot": testAccProvider,
+	}
 }
 
 func TestProvider(t *testing.T) {
@@ -24,11 +40,14 @@ func TestProvider_impl(t *testing.T) {
 	var _ terraform.ResourceProvider = Provider()
 }
 
-func testDnsPreCheck(t *testing.T) {
-	if v := os.Getenv("API_USER"); v == "" {
+func testAccPreCheck(t *testing.T) {
+	if API_USER == "" {
 		t.Fatal("API_USER must be set for acceptance tests")
 	}
-	if v := os.Getenv("API_PASSWORD"); v == "" {
+	if API_PASSWORD == "" {
 		t.Fatal("API_PASSWORD must be set for acceptance tests")
+	}
+	if API_URL == "" {
+		t.Fatal("API_URL must be set for acceptance tests")
 	}
 }
